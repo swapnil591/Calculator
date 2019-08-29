@@ -24,7 +24,8 @@ export default class App extends Component{
   constructor() {
     super()
     this.state = {
-      resultText : ""
+      resultText : "",
+      calculationText : ""
     }
     this.operations = ['D', '+', '-', '*', '/']
   
@@ -32,13 +33,28 @@ export default class App extends Component{
 
   calculationResult(){
     const text = this.state.resultText
+    this.setState({
+        calculationText: eval(text)
+    })
+  }
+
+  validate(){
+    const text = this.state.resultText
+    switch(text.slice(-1)){
+      case '+':
+      case '-':
+      case '*':
+      case '/':
+        return false    
+    }
+    return true
   }
 
   buttonPressed(text){ 
     console.log(text)
     
     if(text == '='){
-      return this.calculationResult()
+      return this.validate() && this.calculationResult()
     }
       
     
@@ -81,16 +97,16 @@ export default class App extends Component{
     for(let i = 0; i < 4; i++){
       let row = []
       for(let j = 0; j < 3; j++){
-        row.push(<TouchableOpacity onPress={() => this.buttonPressed(nums[i][j])}>
+        row.push(<TouchableOpacity key={nums[i][j]} onPress={() => this.buttonPressed(nums[i][j])}>
               <Text style={styles.btntext}>{nums[i][j]}</Text>
           </TouchableOpacity>)
       }
-      rows.push(<View style={styles.row}>{row}</View>)
+      rows.push(<View key={i} style={styles.row}>{row}</View>)
     }
 
     let ops = []
     for(let i = 0; i< 5; i++){
-      ops.push(<TouchableOpacity style={styles.btn} onPress={() => this.operate(this.operations[i])}>
+      ops.push(<TouchableOpacity key={this.operations[i]} style={styles.btn} onPress={() => this.operate(this.operations[i])}>
                   <Text style={[styles.btntext, styles.white]}>{this.operations[i]}</Text>
                   </TouchableOpacity>)
     }
@@ -103,7 +119,7 @@ export default class App extends Component{
             <Text style={styles.resultText} >{this.state.resultText}</Text>
           </View>
           <View style={styles.calculation}>
-            <Text style={styles.calculationText}></Text> 
+            <Text style={styles.calculationText}>{this.state.calculationText}</Text> 
           </View>
           <View style={styles.buttons}>
               <View style={styles.numbers}>
@@ -127,7 +143,9 @@ const styles = StyleSheet.create({
    },
   result:{
     flex: 2,
-    backgroundColor: 'red'
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'flex-end'
   },
   btn:{
     flex: 1,
@@ -137,20 +155,18 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   btntext:{
-    fontSize: 30
+    fontSize: 30,
+    color: 'white'
   },
   resultText:{
-    flex: 1,
     fontSize: 30,
     color: "white", 
-    alignItems: 'flex-end'
-
+  
   },
   calculationText:{
-    flex: 1,
-    fontSize: 25,
+       fontSize: 25,
     color: 'white',
-    alignItems: 'flex-end'
+   
   },
   row:{
     flexDirection: 'row',
@@ -160,7 +176,9 @@ const styles = StyleSheet.create({
   },
   calculation:{
     flex: 1,
-    backgroundColor: 'green'
+    backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'flex-end'
   },
   white:{
     color: 'white'
@@ -171,13 +189,13 @@ const styles = StyleSheet.create({
   },
   numbers:{
     flex: 3,
-    backgroundColor: 'yellow'
+    backgroundColor: '#434343',
   },
   operations:{
     flex: 1,
     justifyContent: 'space-around' ,
     alignItems: 'stretch',
-    backgroundColor: 'black'
+    backgroundColor: '#636363'
   }
 });
 
