@@ -27,7 +27,7 @@ export default class App extends Component{
       resultText : "",
       calculationText : ""
     }
-    this.operations = ['D', '+', '-', '*', '/']
+    this.operations = ['DEL', '+', '-', '*', '/']
   
   }
 
@@ -65,7 +65,7 @@ export default class App extends Component{
 
   operate(operation){
     switch(operation){
-      case 'D':
+      case 'DEL':
         let text = this.state.resultText.split('')
         text.pop()
         this.setState({
@@ -160,12 +160,12 @@ const styles = StyleSheet.create({
   },
   resultText:{
     fontSize: 30,
-    color: "white", 
+    color: "black", 
   
   },
   calculationText:{
        fontSize: 25,
-    color: 'white',
+    color: 'black',
    
   },
   row:{
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   calculation:{
     flex: 1,
-    backgroundColor: 'green',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
