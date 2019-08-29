@@ -1,12 +1,12 @@
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
- *
+ *re
  * @format
  * @flow
  */
 
-import React, {Fragment} from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,101 +14,148 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
+  TouchableOpacity,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default class App extends Component{
+ 
+  constructor() {
+    super()
+    this.state = {
+      resultText : ""
+    }
+  }
 
-const App = () => {
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
+  calculationResult(){
+    const text = this.state.resultText
+  }
+
+  buttonPressed(text){ 
+    console.log(text)
+    
+    if(text == '='){
+      return this.calculationResult()
+    }
+      
+    
+    this.setState({
+      resultText: this.state.resultText+text
+    })
+  }
+
+  operate(operation){
+    switch(operation){
+      case 'D':
+        let text = this.state.resultText.split('')
+        text.pop()
+        this.setState({
+          resultText: text.join('')
+
+        })
+    }
+  }
+
+  render(){
+
+    let rows = []
+    let nums = [[1,2,3],[4,5,6],[7,8,9],['.',0, '=']]
+    for(let i = 0; i < 4; i++){
+      let row = []
+      for(let j = 0; j < 3; j++){
+        row.push(<TouchableOpacity onPress={() => this.buttonPressed(nums[i][j])}>
+              <Text style={styles.btntext}>{nums[i][j]}</Text>
+          </TouchableOpacity>)
+      }
+      rows.push(<View style={styles.row}>{row}</View>)
+    }
+
+    let operations = ['D', '+', '-', '*', '/']
+    let ops = []
+    for(let i = 0; i< 4; i++){
+      ops.push(<TouchableOpacity style={styles.btn} onPress={() => this.operate(operations[i])}>
+                  <Text style={[styles.btntext, styles.white]}>{operations[i]}</Text>
+                  </TouchableOpacity>)
+    }
+
+
+
+    return (
+        <View style={styles.container}>
+          <View style={styles.result}>
+            <Text style={styles.resultText} >{this.state.resultText}</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
-};
+          <View style={styles.calculation}>
+            <Text style={styles.calculationText}></Text> 
+          </View>
+          <View style={styles.buttons}>
+              <View style={styles.numbers}>
+                  {rows}
+              </View>
+              <View style={styles.operations}>
+               {ops}
+              </View>
+          </View>
+        </View>
+    );
+  }
+
+}
+
+
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container:{
+    flex: 1
+   },
+  result:{
+    flex: 2,
+    backgroundColor: 'red'
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  btn:{
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    fontSize: 30,
+    color: 'white'
   },
-  body: {
-    backgroundColor: Colors.white,
+  btntext:{
+    fontSize: 30
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  resultText:{
+    fontSize: 20,
+    color: "white" 
   },
-  sectionTitle: {
+  calculationText:{
     fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+    color: 'white'
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
+  row:{
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
-  highlight: {
-    fontWeight: '700',
+  calculation:{
+    flex: 1,
+    backgroundColor: 'green'
   },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  white:{
+    color: 'white'
   },
+  buttons:{
+    flexGrow: 7,
+    flexDirection: 'row'
+  },
+  numbers:{
+    flex: 3,
+    backgroundColor: 'yellow'
+  },
+  operations:{
+    flex: 1,
+    justifyContent: 'space-around' ,
+    alignItems: 'stretch',
+    backgroundColor: 'black'
+  }
 });
 
-export default App;
