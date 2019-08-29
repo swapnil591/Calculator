@@ -17,6 +17,7 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
+import { throwStatement } from '@babel/types';
 
 export default class App extends Component{
  
@@ -25,6 +26,8 @@ export default class App extends Component{
     this.state = {
       resultText : ""
     }
+    this.operations = ['D', '+', '-', '*', '/']
+  
   }
 
   calculationResult(){
@@ -53,6 +56,21 @@ export default class App extends Component{
           resultText: text.join('')
 
         })
+        break
+      case '+':
+      case '-':
+      case '*':
+      case '/':
+         const lastChar = this.state.resultText.split('').pop()
+         
+         if(this.operations.indexOf(lastChar) > 0) return
+
+        if(this.state.text == "") return
+        this.setState({
+          resultText: this.state.resultText + operation
+        })
+          
+        
     }
   }
 
@@ -70,11 +88,10 @@ export default class App extends Component{
       rows.push(<View style={styles.row}>{row}</View>)
     }
 
-    let operations = ['D', '+', '-', '*', '/']
     let ops = []
-    for(let i = 0; i< 4; i++){
-      ops.push(<TouchableOpacity style={styles.btn} onPress={() => this.operate(operations[i])}>
-                  <Text style={[styles.btntext, styles.white]}>{operations[i]}</Text>
+    for(let i = 0; i< 5; i++){
+      ops.push(<TouchableOpacity style={styles.btn} onPress={() => this.operate(this.operations[i])}>
+                  <Text style={[styles.btntext, styles.white]}>{this.operations[i]}</Text>
                   </TouchableOpacity>)
     }
 
@@ -123,12 +140,17 @@ const styles = StyleSheet.create({
     fontSize: 30
   },
   resultText:{
-    fontSize: 20,
-    color: "white" 
+    flex: 1,
+    fontSize: 30,
+    color: "white", 
+    alignItems: 'flex-end'
+
   },
   calculationText:{
-    fontSize: 24,
-    color: 'white'
+    flex: 1,
+    fontSize: 25,
+    color: 'white',
+    alignItems: 'flex-end'
   },
   row:{
     flexDirection: 'row',
